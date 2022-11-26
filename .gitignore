@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#.envは無視！
+#.envとdataファイルは無視！
 *.env
+datas/
