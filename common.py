@@ -1,43 +1,24 @@
-import datetime
-
 import discord
 
+import kuma_guild
 
-async def ban(message):
-    kuma_junk = 1009461769120526447
-    if not kuma_junk == message.author:
-        await message.channel.send("あなたには権限がありません!")
+join_leave_notice_ch = 1045611804547633263
 
-    args = message.content.split()
-    user = discord.utils.get(message.guild.members, name=args[1])
-    await user.ban()
-    embed = discord.Embed(title="BANは正常に実行されました。",color=0xff0000)
-    embed.set_thumbnail(url=user.avatar_url)
-    embed.add_field(name="対象",value=user,inline=False)
-    embed.add_field(name="実行者",value=message.author,inline=False)
-    await message.channel.send(embed=embed)
+async def on_member_join(client,member):
+    if member.guild.id == 1040191003006603294:
+        await kuma_guild.on_member_join(client,member)
 
-async def kick(message):
-    kuma_junk = 1009461769120526447
-    if not kuma_junk == message.author:
-        await message.channel.send("あなたには権限がありません!")
+async def on_member_remove(client,member):
+    if member.guild.id == 1040191003006603294:
+        await kuma_guild.on_member_remove(client,member)
 
-    args = message.content.split()
-    user = discord.utils.get(message.guild.members, name=args[1])
-    await kick(user=user)
-    embed = discord.Embed(title="kickは正常に実行されました。",color=0xff0000)
-    embed.set_thumbnail(url=user.avatar_url)
-    embed.add_field(name="対象",value=user,inline=False)
-    embed.add_field(name="実行者",value=message.author,inline=False)
-    await message.channel.send(embed=embed)
+#Google form
+async def form_link(message):
+    if message.content == "$opinion":
+        await message.channel.send("https://forms.gle/vxCa7JamHESADDKg7")
 
-async def time(message):
-    now = datetime.datetime.now().strftime(r"%Y年%m月%d日 %H:%M")
-    await message.channel.send("今は" + now + "だよ")
+    if message.content == "$idea":
+        await message.channel.send("https://forms.gle/sgLrwrqRDHfqr3xt9")
 
-async def delete(message):
-    channel = message.channel
-    args = message.content.split()
-    delete_message = args[1]
-    limit = int(delete_message)
-    await channel.purge(limit=limit)
+    if message.content == "$report":
+        await message.channel.send("https://forms.gle/BoAtVRGJSbQh7bgv9")
