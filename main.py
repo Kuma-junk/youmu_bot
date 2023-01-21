@@ -87,8 +87,7 @@ async def on_message(message):
         await sys.exit()
         
     if message.content.startswith ("/test"):
-        test = message.author
-        await message.channel.send(test)
+        await message.channel.send(f"{message.author}")
 
     try:
         try:

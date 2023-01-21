@@ -7,6 +7,9 @@ async def on_message(message,client):
     if message.content == "/auth":
         await kuma_guild_command.auth(message,client)
 
+    if message.content.startswith("メリクリ"):
+        await message.channel.send("メリクリ！")
+
 async def on_member_join(client,member):
     join_leave_notice_ch = client.get_channel(1045611804547633263)
     with open("./datas/user_data.json", mode="r", encoding="utf-8") as f:
