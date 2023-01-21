@@ -1,18 +1,26 @@
 on:
   push:
     branches:
-      - main
-name: Deploy to kuma-note
+      - main # main ブランチへの Push 時にワークフローを実行
 jobs:
-  deploy:
-    name: Deploy to kuma-note
+  connect_ssh:
     runs-on: ubuntu-latest
     steps:
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v1.6.1
-      with:
-        private-key: ${{ secrets.SSH_KEY }}
-        known-hosts: ${{ secrets.KNOWN_HOSTS }}
-        config: ${{ secrets.CONFIG }} # ssh target だけで接続できるように設定
-    - name: run deploy script
-      run: ssh target 'cd /home/kuma-note/youmu_bot && git pull origin main'
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SECRET_KEY }} # サーバへの接続情報は secrets へ保持するようにしています
+          name: id_rsa-target
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          # 以下は ~/.ssh/config と同じフォーマット
+          config: |
+            Host *
+              StrictHostKeyChecking no
+              UserKnownHostsFile=/dev/null
+            Host target
+              HostName ${{ secrets.SSH_HOST }}
+              User ${{ secrets.SSH_USER }}
+              Port ${{ secrets.SSH_PORT }}
+              IdentityFile ~/.ssh/id_rsa-target
+      - name: Connect SSH
+        run: ssh target echo "test"
