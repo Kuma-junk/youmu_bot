@@ -1,18 +1,21 @@
 on:
   push:
     branches:
-      - main # main ブランチへの Push 時にワークフローを実行
+      - main
+name: Deploy
 jobs:
-  connect_ssh:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-20.04
     steps:
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-       key: ${{ secrets.SECRET_KEY }}
-       name: id_rsa # optional
-       known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-       config: ${{ secrets.CONFIG }} # ssh_config; optional
-       if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
-    - name: run script
-      run: ssh target "cd /home/${user}/youmu_bot && git pull origin main"
+    - name: Install Passwd
+      uses: shimataro/ssh-key-action@v1
+      with: # shimataro/ssh-key-actionに渡すパラメーター
+        private-key: ${{ secrets.SSH_KEY }} # 必須
+        known-hosts: ${{ secrets.KNOWN_HOSTS }} # 省略可
+    - name: run deploy script
+      env:
+        port: ${{ secrets.PORT }}
+        host: ${{ secrets.HOST }}
+        owner:  ${{ secrets.OWNER }}
+      run:
+        ssh -i ~/.ssh/authorized_keys -p ${port} ${owner}@${host} "cd /home/${owner}/youmu_bot && git pull origin main"
