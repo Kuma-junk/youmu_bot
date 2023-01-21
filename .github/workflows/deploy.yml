@@ -11,6 +11,7 @@ jobs:
       uses: shimataro/ssh-key-action@v1
       with: # shimataro/ssh-key-actionに渡すパラメーター
         private-key: ${{ secrets.SSH_KEY }} # 必須
+        name: authorized_keys
         known-hosts: ${{ secrets.KNOWN_HOSTS }} # 省略可
     - name: run deploy script
       env:
