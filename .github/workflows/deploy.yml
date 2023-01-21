@@ -2,19 +2,17 @@ on:
   push:
     branches:
       - main
-name: Auto Deploy
+name: Deploy to kuma-note
 jobs:
   deploy:
+    name: Deploy to kuma-note
     runs-on: ubuntu-latest
     steps:
     - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2.5.0
+      uses: shimataro/ssh-key-action@v1.6.1
       with:
-        key: ${{ secrets.SSH_KEY }}
-        name: id_rsa
-        known_hosts: ${{ secrets.KNOWN_HOSTS }}
-        config: ${{ secrets.CONFIG }}
-        if_key_exists: fail
+        private-key: ${{ secrets.SSH_KEY }}
+        known-hosts: ${{ secrets.KNOWN_HOSTS }}
+        config: ${{ secrets.CONFIG }} # ssh target だけで接続できるように設定
     - name: run deploy script
-      run:
-        ssh target "cd /home/kuma-note/youmu_bot && git pull origin main"
+      run: ssh target 'cd /home/kuma-note/youmu_bot && git pull origin main'
