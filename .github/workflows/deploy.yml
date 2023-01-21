@@ -1,16 +1,21 @@
 on:
   push:
     branches:
-      - maine
+      - main
+name: Deploy
 jobs:
-  connect_ssh:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-20.04
     steps:
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2.5.0
-        with:
-          key: ${{ secrets.SECRET_KEY }}
-          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-          config: ${{ secrets.CONFIG }}
-      - name: Connect SSH
-        run: ssh target echo "test"
+    - name: Install Passwd
+      uses: shimataro/ssh-key-action@v1
+      with: # shimataro/ssh-key-actionに渡すパラメーター
+        private-key: ${{ secrets.SECRET_KEY }} # 必須
+        known-hosts: ${{ secrets.KNOWN_HOSTS }} # 省略可
+    - name: run deploy script
+      env:
+        port: ${{ secrets.PORT }}
+        host: ${{ secrets.HOST }}
+        owner:  ${{ secrets.OWNER }}
+      run:
+        ssh -i ~/.ssh/authorized_keys -p ${port} ${owner}@${host} "cd /home/${owner}/marisa && git pull origin main && sudo python3 version_up.py"
