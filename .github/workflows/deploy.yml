@@ -12,10 +12,7 @@ jobs:
       with:
         private-key: ${{ secrets.SSH_KEY }}
         known-hosts: ${{ secrets.KNOWN_HOSTS }}
+        config: ${{ secrets.CONFIG }}
     - name: run deploy script
-      env:
-        port: ${{ secrets.PORT }}
-        host: ${{ secrets.HOST }}
-        owner:  ${{ secrets.OWNER }}
       run:
-        ssh -i ~/.ssh/authorized_keys -p ${port} ${owner}@${host} "cd /home/${owner}/youmu_bot && git pull origin main && sudo python3 restart.py"
+        ssh target "cd /home/${owner}/youmu_bot && git pull origin main && sudo python3 restart.py"
