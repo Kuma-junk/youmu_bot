@@ -17,4 +17,4 @@ jobs:
         if_key_exists: fail
     - name: run deploy script
       run:
-        ssh target "cd /home/kuma-note/youmu_bot && git pull origin main && sudo python3 restart.py"
+        ssh target "cd /home/kuma-note/youmu_bot && git pull origin main"
