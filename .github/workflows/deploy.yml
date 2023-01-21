@@ -12,7 +12,7 @@ jobs:
       with:
         key: ${{ secrets.SSH_KEY }}
         name: id_rsa
-        known-hosts: ${{ secrets.KNOWN_HOSTS }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
         config: ${{ secrets.CONFIG }}
         if_key_exists: fail
     - name: run deploy script
