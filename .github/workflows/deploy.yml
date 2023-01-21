@@ -10,7 +10,7 @@ jobs:
     - name: Install Passwd
       uses: shimataro/ssh-key-action@v1
       with: # shimataro/ssh-key-actionに渡すパラメーター
-        private-key: ${{ secrets.SSH_KEY }} # 必須
+        private-key: ${{ secrets.SECRET_KEY }} # 必須
         known-hosts: ${{ secrets.KNOWN_HOSTS }} # 省略可
     - name: run deploy script
       env:
