@@ -1,18 +1,16 @@
 on:
   push:
     branches:
-      - main # main ブランチへの Push 時にワークフローを実行
+      - maine
 jobs:
   connect_ssh:
     runs-on: ubuntu-latest
     steps:
       - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
+        uses: shimataro/ssh-key-action@v2.5.0
         with:
-          key: ${{ secrets.SECRET_KEY }} # サーバへの接続情報は secrets へ保持するようにしています
-          name: id_rsa-target
+          key: ${{ secrets.SECRET_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
           config: ${{ secrets.CONFIG }}
-          if_key_exists: fail
       - name: Connect SSH
         run: ssh target echo "test"
