@@ -13,14 +13,6 @@ jobs:
           name: id_rsa-target
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
           # 以下は ~/.ssh/config と同じフォーマット
-          config: |
-            Host *
-              StrictHostKeyChecking no
-              UserKnownHostsFile=/dev/null
-            Host target
-              HostName ${{ secrets.SSH_HOST }}
-              User ${{ secrets.SSH_USER }}
-              Port ${{ secrets.SSH_PORT }}
-              IdentityFile ~/.ssh/id_rsa-target
+          config: ${{ secrets.CONFIG }}
       - name: Connect SSH
         run: ssh target echo "test"
