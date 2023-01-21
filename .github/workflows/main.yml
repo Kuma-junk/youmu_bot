@@ -1,0 +1,21 @@
+on:
+  push:
+    branches:
+      - main
+name: Auto Deploy
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v1
+      with:
+        private-key: ${{ secrets.SSH_KEY }}
+        known-hosts: ${{ secrets.KNOWN_HOSTS }}
+    - name: run deploy script
+      env:
+        port: ${{ secrets.PORT }}
+        host: ${{ secrets.HOST }}
+        owner:  ${{ secrets.OWNER }}
+      run:
+        ssh -i ~/.ssh/authorized_keys -p ${port} ${owner}@${host} "cd /home/${owner}/youmu_bot && git pull origin main && sudo python3 restart.py"
