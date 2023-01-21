@@ -1,21 +1,26 @@
 on:
   push:
     branches:
-      - main
-name: Deploy
+      - main # main ブランチへの Push 時にワークフローを実行
 jobs:
-  deploy:
-    runs-on: ubuntu-20.04
+  connect_ssh:
+    runs-on: ubuntu-latest
     steps:
-    - name: Install Passwd
-      uses: shimataro/ssh-key-action@v1
-      with: # shimataro/ssh-key-actionに渡すパラメーター
-        private-key: ${{ secrets.SECRET_KEY }} # 必須
-        known-hosts: ${{ secrets.KNOWN_HOSTS }} # 省略可
-    - name: run deploy script
-      env:
-        port: ${{ secrets.PORT }}
-        host: ${{ secrets.HOST }}
-        owner:  ${{ secrets.OWNER }}
-      run:
-        ssh -i ~/.ssh/authorized_keys -p ${port} ${owner}@${host} "cd /home/${owner}/marisa && git pull origin main && sudo python3 version_up.py"
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SECRET_KEY }} # サーバへの接続情報は secrets へ保持するようにしています
+          name: id_rsa-target
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          # 以下は ~/.ssh/config と同じフォーマット
+          config: |
+            Host *
+              StrictHostKeyChecking no
+              UserKnownHostsFile=/dev/null
+            Host target
+              HostName ${{ secrets.SSH_HOST }}
+              User ${{ secrets.SSH_USER }}
+              Port ${{ secrets.SSH_PORT }}
+              IdentityFile ~/.ssh/id_rsa-target
+      - name: Connect SSH
+        run: ssh target echo "test"
