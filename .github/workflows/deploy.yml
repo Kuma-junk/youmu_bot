@@ -12,7 +12,7 @@ jobs:
           key: ${{ secrets.SECRET_KEY }} # サーバへの接続情報は secrets へ保持するようにしています
           name: id_rsa-target
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-          # 以下は ~/.ssh/config と同じフォーマット
           config: ${{ secrets.CONFIG }}
+          if_key_exists: fail
       - name: Connect SSH
         run: ssh target echo "test"
