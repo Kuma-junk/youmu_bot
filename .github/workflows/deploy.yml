@@ -11,7 +11,7 @@ jobs:
       uses: shimataro/ssh-key-action@v1
       with: # shimataro/ssh-key-actionに渡すパラメーター
         private-key: ${{ secrets.SSH_KEY }} # 必須
-        name: authorized_keys
+        name: id_rsa
         known-hosts: ${{ secrets.KNOWN_HOSTS }} # 省略可
     - name: run deploy script
       env:
@@ -19,4 +19,4 @@ jobs:
         host: ${{ secrets.HOST }}
         owner:  ${{ secrets.OWNER }}
       run:
-        ssh -i ~/.ssh/authorized_keys -p ${port} ${owner}@${host} "cd /home/${owner}/youmu_bot && git pull origin main"
+        ssh -i ~/.ssh/id_rsa -p ${port} ${owner}@${host} "cd /home/${owner}/youmu_bot && git pull origin main"
